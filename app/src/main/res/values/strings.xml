@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MoviesMVP</string>
+    <string name="add_favorite">Add to FavoriteList</string>
+    <string name="remove_favorite">Remove from FavoriteList</string>
+    <string name="add_fav">is added to FavoriteList</string>
+    <string name="remove_fav">is removed from FavoriteList</string>
+    <string name="popular">Most Popular</string>
+    <string name="rated">Top Rated</string>
+    <string name="favorite">Favorite</string>
+
+</resources>
