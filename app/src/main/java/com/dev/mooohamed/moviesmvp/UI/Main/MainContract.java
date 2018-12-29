@@ -1,5 +1,7 @@
 package com.dev.mooohamed.moviesmvp.UI.Main;
 
+import android.content.Context;
+
 import com.dev.mooohamed.moviesmvp.Data.Models.Movie;
 
 import java.util.List;
@@ -13,7 +15,7 @@ public interface MainContract {
 
     interface ReceiveTypeDataListener{
 
-        void OnReceive(String type,MainContract.ReceiveMoviesViewListener viewListener);
+        void OnReceive(String type, MainContract.ReceiveMoviesViewListener viewListener, Context context);
     }
 
 

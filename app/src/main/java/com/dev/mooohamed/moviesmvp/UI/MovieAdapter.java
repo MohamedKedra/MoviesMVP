@@ -1,4 +1,4 @@
-package com.dev.mooohamed.moviesmvp.Adapters;
+package com.dev.mooohamed.moviesmvp.UI;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

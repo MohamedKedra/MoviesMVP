@@ -1,5 +1,8 @@
 package com.dev.mooohamed.moviesmvp.UI.Main;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.dev.mooohamed.moviesmvp.Data.Models.Movie;
 import com.dev.mooohamed.moviesmvp.Data.Models.MovieResponse;
 import com.dev.mooohamed.moviesmvp.Services.API;
@@ -28,10 +31,12 @@ public class MainData implements MainContract.ReceiveTypeDataListener {
     Observable<MovieResponse> call;
     MainContract.SendDataPresenterListener presenterListener;
     List<Movie> movies;
+    Context context;
 
     @Override
-    public void OnReceive(String type,MainContract.ReceiveMoviesViewListener viewListener) {
+    public void OnReceive(String type, MainContract.ReceiveMoviesViewListener viewListener, Context context) {
 
+        this.context = context;
         retrofit = new Retrofit.Builder()
                 .baseUrl(Urls.base)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -45,7 +50,7 @@ public class MainData implements MainContract.ReceiveTypeDataListener {
             call = api.getRatedMovies(Urls.key);
         }
         call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
-        presenterListener = new MainPresenter(viewListener);
+        presenterListener = new MainPresenter(viewListener,context);
     }
 
     Observer<MovieResponse> observer = new Observer<MovieResponse>() {
@@ -60,7 +65,7 @@ public class MainData implements MainContract.ReceiveTypeDataListener {
 
         @Override
         public void onError(Throwable e) {
-            System.out.println(e.getMessage());
+            Toast.makeText(context,"Problem is found",Toast.LENGTH_SHORT).show();
         }
 
         @Override

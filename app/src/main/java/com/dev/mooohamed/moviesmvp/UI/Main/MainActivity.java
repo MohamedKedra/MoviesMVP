@@ -3,8 +3,6 @@ package com.dev.mooohamed.moviesmvp.UI.Main;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +13,10 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
-import com.dev.mooohamed.moviesmvp.Adapters.MovieAdapter;
+import com.dev.mooohamed.moviesmvp.UI.MovieAdapter;
 import com.dev.mooohamed.moviesmvp.Data.Models.Movie;
 import com.dev.mooohamed.moviesmvp.R;
 import com.dev.mooohamed.moviesmvp.Services.Urls;
@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.Rece
 
     @BindView(R.id.rv_recycler)
     RecyclerView recyclerView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     GridLayoutManager layoutManager;
     MovieAdapter adapter;
     MainContract.SendDataPresenterListener presenterListener;
@@ -50,8 +52,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Rece
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        presenterListener = new MainPresenter(this);
+        presenterListener = new MainPresenter(this,this);
         detailsData = new DetailsData(this); // for access data from database
         display = getWindowManager().getDefaultDisplay();
         checkMode();
@@ -89,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Rece
         if (display.getRotation() == 0){
             layoutManager = new GridLayoutManager(this, 2);
         }else {
-
             layoutManager = new GridLayoutManager(this, 3);
         }
     }
@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Rece
 
     @Override
     public void OnReceive(List<Movie> movies) {
+        progressBar.setVisibility(View.GONE);
         adapter = new MovieAdapter(MainActivity.this, movies);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Rece
     MovieAdapter.OnItemClickListener onItemClickListener = new MovieAdapter.OnItemClickListener() {
         @Override
         public void onClick(Movie movie) {
+            progressBar.setVisibility(View.GONE);
             Intent intent = new Intent(MainActivity.this,DetailsActivity.class);
             intent.putExtra(MovieKey , movie);
             startActivity(intent);

@@ -7,6 +7,6 @@ public class Urls {
     public final static String ImageBase = "http://image.tmdb.org/t/p/w342";
     public final static String Popular = "Most Popular";
     public final static String Rated = "Top Rated";
-    public final static String trailers =  "/videos?" + key;
-    public final static String reviews =  "/reviews?" + key;
+    public final static String Facebook =  "https://graph.facebook.com/";
+    public final static String AvatarSize =  "/picture?width=250&height=250";
 }
