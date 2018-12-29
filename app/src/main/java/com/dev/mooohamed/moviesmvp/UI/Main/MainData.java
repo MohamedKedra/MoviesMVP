@@ -1,21 +1,33 @@
 package com.dev.mooohamed.moviesmvp.UI.Main;
 
+import com.dev.mooohamed.moviesmvp.Data.Models.Movie;
 import com.dev.mooohamed.moviesmvp.Data.Models.MovieResponse;
 import com.dev.mooohamed.moviesmvp.Services.API;
 import com.dev.mooohamed.moviesmvp.Services.Urls;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainData implements MainContract.ReceiveTypeDataListener {
 
     Retrofit retrofit;
     API api;
-    Call<MovieResponse> call;
+    Observable<MovieResponse> call;
     MainContract.SendDataPresenterListener presenterListener;
+    List<Movie> movies;
 
     @Override
     public void OnReceive(String type,MainContract.ReceiveMoviesViewListener viewListener) {
@@ -23,6 +35,7 @@ public class MainData implements MainContract.ReceiveTypeDataListener {
         retrofit = new Retrofit.Builder()
                 .baseUrl(Urls.base)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
         api = retrofit.create(API.class);
@@ -31,10 +44,31 @@ public class MainData implements MainContract.ReceiveTypeDataListener {
         }else {
             call = api.getRatedMovies(Urls.key);
         }
-        call.enqueue(callback);
+        call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
         presenterListener = new MainPresenter(viewListener);
     }
 
+    Observer<MovieResponse> observer = new Observer<MovieResponse>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+        }
+
+        @Override
+        public void onNext(MovieResponse movieResponse) {
+            movies = new ArrayList<>(movieResponse.getResults());
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            System.out.println(e.getMessage());
+        }
+
+        @Override
+        public void onComplete() {
+            presenterListener.OnSendMovies(movies);
+        }
+    };
+/*
     Callback<MovieResponse> callback = new Callback<MovieResponse>() {
         @Override
         public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
@@ -49,5 +83,5 @@ public class MainData implements MainContract.ReceiveTypeDataListener {
         public void onFailure(Call<MovieResponse> call, Throwable t) {
             System.out.println(t.getMessage());
         }
-    };
+    };*/
 }

@@ -19,6 +19,6 @@ public interface DetailsContract {
 
     interface FavoriteData {
 
-        void findMovie(int movieId);
+        void findMovie(int movieId,DetailsContract.FavoriteView favoriteView);
     }
 }

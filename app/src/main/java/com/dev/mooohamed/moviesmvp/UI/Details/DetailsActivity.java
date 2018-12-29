@@ -74,7 +74,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsContrac
                 presenter.addMovie(movie);
                 Toast.makeText(DetailsActivity.this, movie.getTitle()+getResources().getString(R.string.add_fav), Toast.LENGTH_SHORT).show();
                 favorite.setBackgroundResource(R.drawable.remove_favorite_design);
-
             }
         }
     };

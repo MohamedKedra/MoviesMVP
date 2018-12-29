@@ -9,8 +9,8 @@ public class DetailsPresenter implements DetailsContract.FavoritePresenter{
     DetailsData detailsData;
     DetailsContract.FavoriteView favoriteView;
 
-    public DetailsPresenter(Context context,DetailsContract.FavoriteView favoriteView){
-        detailsData = new DetailsData(context,favoriteView);
+    public DetailsPresenter(Context context, DetailsContract.FavoriteView favoriteView){
+        detailsData = new DetailsData(context);
         this.favoriteView = favoriteView;
     }
 
@@ -21,7 +21,7 @@ public class DetailsPresenter implements DetailsContract.FavoritePresenter{
 
     @Override
     public void removeFavorite(Movie movie) {
-
+        detailsData.deleteMovie(movie);
     }
 
     @Override
@@ -31,6 +31,6 @@ public class DetailsPresenter implements DetailsContract.FavoritePresenter{
 
     @Override
     public void findMovie(int movieId) {
-        detailsData.findMovie(movieId);
+        detailsData.findMovie(movieId,favoriteView);
     }
 }

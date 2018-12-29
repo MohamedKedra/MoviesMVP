@@ -18,13 +18,15 @@ public class DetailsData  implements DetailsContract.FavoriteData
     MovieDao movieDao;
     LiveData<List<Movie>> movies;
     DetailsContract.FavoritePresenter presenter;
+    DetailsContract.FavoriteView favoriteView;
+    Context context;
 
-    public DetailsData(Context context,DetailsContract.FavoriteView favoriteView){
+    public DetailsData(Context context){
 
+        this.context = context;
         movieDatabase = MovieDatabase.getInstance(context);
         movieDao = movieDatabase.movieDao();
         movies = movieDao.getAllMovieList();
-        presenter = new DetailsPresenter(context,favoriteView);
     }
 
     public void addNewMovie(Movie movie){
@@ -41,7 +43,8 @@ public class DetailsData  implements DetailsContract.FavoriteData
     }
 
     @Override
-    public void findMovie(int movieId) {
+    public void findMovie(int movieId,DetailsContract.FavoriteView favoriteView) {
+        this.favoriteView = favoriteView;
         new FindTask(movieDao).execute(movieId);
     }
 
@@ -95,6 +98,7 @@ public class DetailsData  implements DetailsContract.FavoriteData
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
+            presenter = new DetailsPresenter(context,favoriteView);
             presenter.isFavorite(aBoolean);
         }
     }
